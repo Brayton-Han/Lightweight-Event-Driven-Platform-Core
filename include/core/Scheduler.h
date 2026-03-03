@@ -15,7 +15,6 @@ struct ScheduledItem {
 
 class Scheduler {
 public:
-    Scheduler();
     void enqueue(const Task& task, const Event& event);
     std::optional<ScheduledItem> pick_next();
     size_t size() const;
