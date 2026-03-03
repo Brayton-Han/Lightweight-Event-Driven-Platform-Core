@@ -1,6 +1,8 @@
 #include <iostream>
 
 int main() {
-    std::cout << "Hello, Event-Driven Platform!" << std::endl;
+    std::cout << "Hello, welcome to the Event-Driven Platform!" << std::endl;
+
+
     return 0;
 }
