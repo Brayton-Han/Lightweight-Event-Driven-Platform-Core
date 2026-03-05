@@ -11,3 +11,5 @@ ensure predictable task execution behavior.
 
 4. Developed performance instrumentation to measure average, P95, and worst-case response latency under
 configurable stress workloads.
+
+![Metrics](images/metrics.png)
