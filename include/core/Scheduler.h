@@ -18,6 +18,9 @@ public:
     // maximum allowed priority - tasks or aging won't raise priority above this
     static constexpr int kMaxPriority = 32;
 
+    // globally control debug logging (default off)
+    static bool debug;
+
     Scheduler();
 
     void enqueue(const Task& task, const Event& event);

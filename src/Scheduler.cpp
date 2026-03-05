@@ -1,6 +1,9 @@
 #include "core/Scheduler.h"
 #include <iostream>
 
+// debug flag definition
+bool Scheduler::debug = false;
+
 static uint64_t now_ns() {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(
                std::chrono::steady_clock::now().time_since_epoch())
@@ -16,7 +19,7 @@ void Scheduler::enqueue(const Task& task, const Event& event) {
     int pri = std::min(task.priority, kMaxPriority);
     queues_[pri].push_back({task, event, now_ns(), pri});
     if (pri > highest_priority_) highest_priority_ = pri;
-    std::cout << "[sched] enqueue '" << task.name << "' pri=" << pri << "\n";
+    if (debug) std::cout << "[sched] enqueue '" << task.name << "' pri=" << pri << "\n";
 }
 
 std::optional<ScheduledItem> Scheduler::pick_next() {
@@ -37,7 +40,7 @@ std::optional<ScheduledItem> Scheduler::pick_next() {
             }
 
             auto latency = now - item.event.ts_ns;
-            std::cout << "[sched] dispatch '" << item.task.name << "' pri="
+            if (debug) std::cout << "[sched] dispatch '" << item.task.name << "' pri="
                       << item.effective_priority << " latency=" << latency << "ns\n";
             return item;
         }
@@ -52,7 +55,7 @@ void Scheduler::apply_aging_locked(uint64_t now) {
         for (auto qit = queue.begin(); qit != queue.end(); /* no increment here */) {
             if (now - qit->enqueue_ts_ns > aging_threshold_ns && qit->effective_priority < kMaxPriority) {
                 int new_pri = qit->effective_priority + 1;
-                std::cout << "[sched] aging promote '" << qit->task.name << "' to pri=" << new_pri << "\n";
+                if (debug) std::cout << "[sched] aging promote '" << qit->task.name << "' to pri=" << new_pri << "\n";
                 auto item = std::move(*qit);
                 item.effective_priority = new_pri;
                 qit = queue.erase(qit);

@@ -32,12 +32,12 @@ int main() {
         (void)e; // Unused parameter
         for (volatile int i = 0; i < 500; ++i); // Simulate work
     }};
-    Task lo_3{2, "AnotherLoTask", [](const Event& e) {
+    Task lo_3{3, "YetAnotherLoTask", [](const Event& e) {
         (void)e; // Unused parameter
         for (volatile int i = 0; i < 500; ++i); // Simulate work
     }};
 
-    // timer to enqueue low priority task every 10ms
+    // timer to enqueue low priority task every 5ms
     loop.add_timerfd(5, EventType::TimerTick);
     loop.register_task(EventType::TimerTick, lo);
     loop.register_task(EventType::TimerTick, lo_2);
@@ -65,7 +65,7 @@ int main() {
         }
     });
 
-    // Simulate external interrupts every 7ms
+    // Simulate external interrupts every 3ms
     std::thread irq_simulator([&]() {
         while (running.load()) {
             loop.signal_eventfd(irq_fd, 1);

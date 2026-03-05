@@ -12,6 +12,22 @@ add_executable(core
     src/Scheduler.cpp
 )
 
+# stress test executable
+add_executable(test_scheduler
+    tests/test_scheduler.cpp
+    src/Scheduler.cpp
+)
+
+# stress injector executable for EventLoop
+add_executable(stress_injector
+    tools/stress_injector.cpp
+    src/EventLoop.cpp
+    src/Scheduler.cpp
+    src/Metrics.cpp
+)
+
 # Include directories
-target_include_directories(core PRIVATE include)
-target_compile_options(core PRIVATE -O2 -Wall -Wextra -Wpedantic)
+foreach(tgt core test_scheduler stress_injector)
+    target_include_directories(${tgt} PRIVATE include)
+    target_compile_options(${tgt} PRIVATE -O2 -Wall -Wextra -Wpedantic)
+endforeach()
